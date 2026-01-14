@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Tree • Focus Garden</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<div id="toast" class="toast hidden"></div>
+
+<body>
+
+  <!-- NAV -->
+  <nav class="app-nav">
+    <a href="index.html">Focus</a>
+    <a href="trees.html">Trees</a>
+    <a href="forest.html">Forest</a>
+    <a href="history.html">History</a>
+  </nav>
+
+  <main class="app-container">
+    <div class="coin-badge">
+       <div class="card"></div>
+  🪙 <span class="coin-count">0</span>
+</div>
+
+    <header class="app-header">
+      <h1>Select Your Tree</h1>
+      <p>This tree will grow during your focus session</p>
+    </header>
+
+   <section class="tree-grid">
+
+  <!-- FREE TREES -->
+  <button class="tree-card" data-tree="oak" data-price="0">
+    🌳 <span>Oak</span>
+  </button>
+
+  <button class="tree-card" data-tree="pine" data-price="0">
+    🌲 <span>Pine</span>
+  </button>
+
+  <button class="tree-card" data-tree="cherry" data-price="0">
+    🌸 <span>Cherry</span>
+  </button>
+
+  <!-- LOCKED TREES -->
+  <button class="tree-card locked" data-tree="palm" data-price="5">
+    🌴 <span>Palm</span>
+  </button>
+
+  <button class="tree-card locked" data-tree="cactus" data-price="5">
+    🌵 <span>Cactus</span>
+  </button>
+
+  <button class="tree-card locked" data-tree="maple" data-price="8">
+    🍁 <span>Maple</span>
+  </button>
+
+  <button class="tree-card locked" data-tree="bamboo" data-price="10">
+    🎋 <span>Bamboo</span>
+  </button>
+
+  <button class="tree-card locked" data-tree="bonsai" data-price="12">
+    🪴 <span>Bonsai</span>
+  </button>
+
+</section>
+
+
+    <p class="plant-status">Selected tree will be used on Focus page</p>
+  </main>
+<script>
+  const treeButtons = document.querySelectorAll(".tree-card");
+
+  function getUnlockedTrees() {
+    return JSON.parse(localStorage.getItem("unlockedTrees")) || ["oak", "pine", "cherry"];
+  }
+
+  function saveUnlockedTrees(list) {
+    localStorage.setItem("unlockedTrees", JSON.stringify(list));
+  }
+
+  function getCoins() {
+    return Number(localStorage.getItem("coins")) || 0;
+  }
+
+  function updateCoinsUI() {
+    document.querySelector(".coin-count").textContent = getCoins();
+  }
+
+  const unlocked = getUnlockedTrees();
+
+  treeButtons.forEach(btn => {
+    const tree = btn.dataset.tree;
+    const price = Number(btn.dataset.price);
+
+    if (unlocked.includes(tree)) {
+      btn.classList.remove("locked");
+    }
+
+    btn.addEventListener("click", () => {
+      const unlockedTrees = getUnlockedTrees();
+
+      if (unlockedTrees.includes(tree)) {
+        localStorage.setItem("selectedTree", tree);
+        treeButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        return;
+      }
+
+      if (getCoins() < price) {
+        showToast("Not enough coins 🪙", "error")
+        return;
+      }
+
+      // Unlock
+      const remaining = getCoins() - price;
+      localStorage.setItem("coins", remaining);
+
+      unlockedTrees.push(tree);
+      saveUnlockedTrees(unlockedTrees);
+
+      btn.classList.remove("locked");
+      btn.classList.add("active");
+      localStorage.setItem("selectedTree", tree);
+
+      updateCoinsUI();
+    });
+  });
+
+  updateCoinsUI();
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History • Focus Garden</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<div id="toast" class="toast hidden"></div>
+
+<body>
+
+  <!-- NAV -->
+  <nav class="app-nav">
+    <a href="index.html">Focus</a>
+    <a href="trees.html">Trees</a>
+    <a href="forest.html">Forest</a>
+    <a href="history.html">History</a>
+  </nav>
+
+ <main class="app-container">
+ <div class="card"></div>
+  <header class="app-header">
+    <h1>Focus History</h1>
+    <p>Your focus patterns & insights</p>
+  </header>
+
+  <!-- SUMMARY -->
+  <section class="history-summary">
+
+  <div class="summary-card">
+    <p>Total Focus</p>
+    <h2 id="total-focus-time">—</h2>
+  </div>
+
+  <div class="summary-card">
+    <p>Total Sessions</p>
+    <h2 id="total-sessions">—</h2>
+  </div>
+
+  <!-- ✅ ADD THIS BLOCK -->
+  <div class="summary-card">
+    <p>Total Trees</p>
+    <h2 id="total-trees">—</h2>
+  </div>
+
+  <div class="summary-card">
+    <p>Top Category</p>
+    <h2 id="top-category">—</h2>
+  </div>
+
+</section>
+
+  <!-- WEEKLY -->
+  <section class="history-section">
+    <h3>Last 7 Days</h3>
+    <div id="weekly-bars" class="bar-chart"></div>
+  </section>
+
+  <!-- MONTHLY HEATMAP -->
+<section class="history-section">
+  <h3>This Month</h3>
+  <div id="heatmap" class="heatmap"></div>
+</section>
+
+
+
+
+  <!-- INSIGHTS -->
+  <section class="history-section">
+    <h3>Insights</h3>
+    <p id="top-day">Most focused day: —</p>
+    <p id="top-hour">Most focused hour: —</p>
+  </section>
+
+</main>
+
+<script src="./js/history.js"></script>
+
+</body>
+</html>

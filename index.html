@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Garden</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<div id="toast" class="toast hidden"></div>
+
+<body>
+
+  <!-- NAV -->
+  <nav class="app-nav">
+    <a href="index.html">Focus</a>
+    <a href="trees.html">Trees</a>
+    <a href="forest.html">Forest</a>
+    <a href="history.html">History</a>
+  </nav>
+
+  <main class="app-container">
+<div class="coin-badge">
+   <div class="card"></div>
+  🪙 <span class="coin-count">0</span>
+</div>
+
+    <!-- HEADER -->
+    <header class="app-header">
+      <h1>Focus Garden</h1>
+      <p>Grow focus. Kill distraction.</p>
+    </header>
+
+    <!-- TIMER -->
+    <section class="timer-section">
+      <div class="timer-wrapper">
+        <svg class="progress-ring" width="180" height="180">
+          <circle
+            class="progress-ring-bg"
+            stroke="#1e293b"
+            stroke-width="8"
+            fill="transparent"
+            r="80"
+            cx="90"
+            cy="90"
+          />
+          <circle
+            class="progress-ring-fill"
+            stroke="#22c55e"
+            stroke-width="8"
+            fill="transparent"
+            r="80"
+            cx="90"
+            cy="90"
+          />
+        </svg>
+
+        <div class="timer-display ring-timer">15:00</div>
+      </div>
+    </section>
+
+    <!-- CONTROLS -->
+    <section class="control-section">
+
+      <!-- TIME INPUT -->
+      <input
+        type="number"
+        id="minutes-input"
+        min="15"
+        max="240"
+        step="15"
+        value="15"
+      />
+
+      <!-- PRESETS -->
+      <div class="preset-buttons">
+        <button data-min="15">15</button>
+        <button data-min="30">30</button>
+        <button data-min="45">45</button>
+        <button data-min="60">60</button>
+        <button data-min="90">90</button>
+        <button data-min="120">120</button>
+        <button data-min="240">240</button>
+      </div>
+
+      <!-- WARNING -->
+      <p class="warning-message"></p>
+
+      <!-- TREE SELECT -->
+      <p class="plant-status">
+        Selected tree: <span id="current-tree-name"></span>
+      </p>
+<div class="focus-mode">
+  <p class="mode-label">Focus Mode</p>
+
+  <label class="mode-option">
+    <input type="radio" name="focus-mode" value="offscreen" checked />
+    🌿 Off-Screen (No tab switching)
+  </label>
+
+  <label class="mode-option">
+    <input type="radio" name="focus-mode" value="onscreen" />
+    💻 On-Screen (Tabs allowed)
+  </label>
+</div>
+
+      <select id="category-select" class="category-select">
+      <option value="">Select category</option>
+      <option value="Study">📚 Study</option>
+      <option value="Coding">💻 Coding</option>
+      <option value="Reading">📖 Reading</option>
+      <option value="Workout">🏋️ Workout</option>
+      <option value="Meditation">🧘 Meditation</option>
+      <option value="Work">🧠 Work</option>
+      <option value="Creative">🎨 Creative</option>
+    </select>
+
+    <button id="add-category-btn" class="secondary-btn">
+      ➕ Add Category
+    </button>
+    <button id="delete-category-btn" class="secondary-btn danger">
+      🗑 Delete Category
+    </button>
+
+
+    <button id="choose-tree-btn" class="secondary-btn">
+      🌱 Choose Tree
+    </button>
+
+    <!-- START / RESET -->
+    <div class="controls">
+      <button id="start-btn">Start Focus</button>
+      <button id="reset-btn" disabled>Reset</button>
+    </div>
+
+    </section>
+
+    <!-- PLANT -->
+    <section class="growth-section">
+      <div id="plant" class="plant seed">🌰</div>
+      <p class="plant-status">Start focusing to grow your plant</p>
+    </section>
+
+  </main>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
