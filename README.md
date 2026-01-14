@@ -148,12 +148,6 @@ Inspired by the Forest app, but designed and implemented from scratch.
 
 ---
 
-## ⭐ Why This Project Matters
 
-This project demonstrates:
-- Product thinking (not just coding)
-- State management without frameworks
-- UX decisions grounded in real use-cases
-- Clean architecture in a frontend-only app
   
 
