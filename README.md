@@ -4,6 +4,10 @@
 
 Unlike simple timers, Focus Garden combines **behavioral psychology**, **visual progress**, and **analytics** to help users understand *how* and *when* they focus best.
 
+
+🔗 **Live Demo:**  
+https://nitya-bin07.github.io/focus-garden/
+
 ---
 
 ## ✨ Key Features
