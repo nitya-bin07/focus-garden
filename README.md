@@ -87,6 +87,16 @@ Focus Garden is built around a few core principles:
 - **Fair focus rules**  
   Coding ≠ distraction → focus mode adapts to task type.
 
+  ### 🎉 Session Completion
+- Confetti animation on successful session
+- Post-session note prompt ("What did you accomplish?")
+- Notes saved with each session and visible in forest view
+
+  ### 🪙 Tree Shop
+- 8 tree species (3 free, 5 unlockable)
+- Spend coins to unlock new trees
+- Owned/Selected/Locked states clearly shown
+
 ---
 
 ## 🛠️ Tech Stack
@@ -133,8 +143,6 @@ No build steps required.
 
 ## 🔮 Future Improvements
 
-- Custom dropdown UI for categories
-- Focus-mode analytics (on-screen vs off-screen)
 - Calendar-based forest layout
 - Export focus history
 - Accessibility improvements
