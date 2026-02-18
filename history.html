@@ -5,77 +5,131 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>History • Focus Garden</title>
   <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    body { padding-bottom: 5rem; }
+    .page-container { width:100%; max-width:480px; margin:0 auto; padding:1rem 1.2rem 6rem; display:flex; flex-direction:column; gap:1rem; }
+    .app-header { text-align:center; padding:1rem 1.4rem 0.8rem; background:linear-gradient(135deg,rgba(18,28,48,0.9),rgba(8,12,22,0.85)); border:1px solid rgba(255,255,255,0.08); border-radius:18px; }
+    .app-header h1 { font-size:1.8rem; font-weight:700; background-image:linear-gradient(90deg,#7CFF9B,#3EDC81); background-clip:text; -webkit-background-clip:text; color:transparent; -webkit-text-fill-color:transparent; }
+    .app-header p { font-size:0.8rem; color:rgba(220,230,255,0.6); margin-top:4px; }
+    .streak-banner { background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(34,197,94,0.04)); border:1px solid rgba(34,197,94,0.2); border-radius:18px; padding:1.1rem 1.4rem; display:flex; justify-content:space-around; align-items:center; }
+    .streak-item { text-align:center; }
+    .streak-val { font-size:2rem; font-weight:700; color:#22c55e; display:block; }
+    .streak-label { font-size:0.68rem; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px; }
+    .streak-divider { width:1px; height:40px; background:rgba(255,255,255,0.08); }
+    .summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.6rem; }
+    .summary-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:0.9rem 0.6rem; text-align:center; }
+    .summary-card .val { font-size:1.4rem; font-weight:700; color:#22c55e; display:block; }
+    .summary-card .lbl { font-size:0.62rem; color:#6b7280; text-transform:uppercase; letter-spacing:0.4px; margin-top:0.2rem; display:block; }
+    .summary-card.wide { grid-column:span 3; display:flex; align-items:center; justify-content:space-between; padding:0.8rem 1rem; }
+    .summary-card.wide .lbl { margin:0; }
+    .summary-card.wide .val { font-size:1.1rem; }
+    .section-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:18px; padding:1.1rem; }
+    .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+    .section-title { font-size:0.75rem; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:0.6px; }
+    .heatmap-tabs { display:flex; gap:0.3rem; }
+    .heatmap-tab { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:0.25rem 0.6rem; font-size:0.7rem; color:#6b7280; cursor:pointer; }
+    .heatmap-tab.active { background:rgba(34,197,94,0.15); border-color:rgba(34,197,94,0.4); color:#22c55e; font-weight:600; }
+    .heatmap-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.6rem; }
+    .nav-btn { background:rgba(255,255,255,0.05); border:none; color:#9ca3af; border-radius:6px; padding:0.2rem 0.6rem; cursor:pointer; font-size:1rem; }
+    .nav-btn:hover { background:rgba(255,255,255,0.1); color:#e5e7eb; }
+    .nav-label { font-size:0.85rem; color:#9ca3af; font-weight:500; }
+    .day-labels-row { display:grid; grid-template-columns:repeat(7,1fr); gap:0.22rem; margin-bottom:0.3rem; }
+    .day-lbl { font-size:0.55rem; color:#4b5563; text-align:center; }
+    .heatmap-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:0.22rem; }
+    .heatmap-grid.yearly { grid-template-columns:repeat(53,1fr); grid-template-rows:repeat(7,1fr); grid-auto-flow:column; overflow-x:auto; gap:0.14rem; padding-bottom:0.4rem; }
+    .hm-cell { aspect-ratio:1; border-radius:3px; background:#0d1117; border:1px solid rgba(255,255,255,0.04); cursor:default; transition:transform 0.1s ease; position:relative; }
+    .hm-cell:hover { transform:scale(1.4); z-index:10; }
+    .hm-cell.l0 { background:#0d1117; }
+    .hm-cell.l1 { background:#0e4429; }
+    .hm-cell.l2 { background:#006d32; }
+    .hm-cell.l3 { background:#26a641; }
+    .hm-cell.l4 { background:#39d353; }
+    .hm-cell.today { outline:2px solid #22c55e; outline-offset:1px; }
+    .hm-cell.filler { background:transparent; border-color:transparent; }
+    .hm-cell[data-tip]:hover::after { content:attr(data-tip); position:absolute; bottom:130%; left:50%; transform:translateX(-50%); background:#1e2a3a; border:1px solid rgba(255,255,255,0.1); color:#e5e7eb; font-size:0.6rem; white-space:nowrap; padding:0.25rem 0.5rem; border-radius:6px; pointer-events:none; z-index:100; }
+    .heatmap-legend { display:flex; align-items:center; gap:0.3rem; margin-top:0.7rem; justify-content:flex-end; }
+    .legend-label { font-size:0.6rem; color:#4b5563; }
+    .legend-cell { width:10px; height:10px; border-radius:2px; }
+    .bar-chart { display:flex; align-items:flex-end; gap:0.3rem; height:200px; width: 100%; }
+    .bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:0.25rem; }
+    .bar { width:100%; background:linear-gradient(180deg,#22c55e,rgba(34,197,94,0.35)); border-radius:4px 4px 0 0; min-height:3px; animation:growBar 0.5s ease-out; transform-origin:bottom; }
+    .bar.today-bar { background:linear-gradient(180deg,#86efac,#22c55e); }
+    .bar-lbl { font-size:0.58rem; color:#6b7280; }
+    @keyframes growBar { from{transform:scaleY(0)} to{transform:scaleY(1)} }
+    .empty-msg { text-align:center; color:#4b5563; font-size:0.8rem; padding:1.2rem 0; }
+    .insight-row { display:flex; align-items:center; gap:0.7rem; padding:0.6rem 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .insight-row:last-child { border-bottom:none; }
+    .insight-icon { font-size:1.1rem; }
+    .insight-text { font-size:0.8rem; color:#9ca3af; }
+  </style>
 </head>
-<div id="toast" class="toast hidden"></div>
-
 <body>
-
-  <!-- NAV -->
   <nav class="app-nav">
     <a href="index.html">Focus</a>
     <a href="trees.html">Trees</a>
     <a href="forest.html">Forest</a>
     <a href="history.html">History</a>
   </nav>
-
- <main class="app-container">
- <div class="card"></div>
-  <header class="app-header">
-    <h1>Focus History</h1>
-    <p>Your focus patterns & insights</p>
-  </header>
-
-  <!-- SUMMARY -->
-  <section class="history-summary">
-
-  <div class="summary-card">
-    <p>Total Focus</p>
-    <h2 id="total-focus-time">—</h2>
-  </div>
-
-  <div class="summary-card">
-    <p>Total Sessions</p>
-    <h2 id="total-sessions">—</h2>
-  </div>
-
-  <!-- ✅ ADD THIS BLOCK -->
-  <div class="summary-card">
-    <p>Total Trees</p>
-    <h2 id="total-trees">—</h2>
-  </div>
-
-  <div class="summary-card">
-    <p>Top Category</p>
-    <h2 id="top-category">—</h2>
-  </div>
-
-</section>
-
-  <!-- WEEKLY -->
-  <section class="history-section">
-    <h3>Last 7 Days</h3>
-    <div id="weekly-bars" class="bar-chart"></div>
-  </section>
-
-  <!-- MONTHLY HEATMAP -->
-<section class="history-section">
-  <h3>This Month</h3>
-  <div id="heatmap" class="heatmap"></div>
-</section>
-
-
-
-
-  <!-- INSIGHTS -->
-  <section class="history-section">
-    <h3>Insights</h3>
-    <p id="top-day">Most focused day: —</p>
-    <p id="top-hour">Most focused hour: —</p>
-  </section>
-
-</main>
-
-<script src="./js/history.js"></script>
-
+  <main class="page-container">
+    <header class="app-header">
+      <h1>Focus History</h1>
+      <p>Your focus patterns & insights</p>
+    </header>
+    <div class="streak-banner">
+      <div class="streak-item">
+        <span class="streak-val" id="current-streak">—</span>
+        <span class="streak-label">🔥 Current Streak</span>
+      </div>
+      <div class="streak-divider"></div>
+      <div class="streak-item">
+        <span class="streak-val" id="best-streak">—</span>
+        <span class="streak-label">🏆 Best Streak</span>
+      </div>
+    </div>
+    <div class="summary-grid">
+      <div class="summary-card"><span class="val" id="total-focus-time">—</span><span class="lbl">Focus Time</span></div>
+      <div class="summary-card"><span class="val" id="total-sessions">—</span><span class="lbl">Sessions</span></div>
+      <div class="summary-card"><span class="val" id="total-trees">—</span><span class="lbl">Trees 🌳</span></div>
+      <div class="summary-card wide"><span class="lbl">Top Category</span><span class="val" id="top-category">—</span></div>
+    </div>
+    <div class="section-card">
+      <div class="section-header">
+        <span class="section-title">Focus Heatmap</span>
+        <div class="heatmap-tabs">
+          <button class="heatmap-tab active" onclick="switchView('monthly')">Month</button>
+          <button class="heatmap-tab" onclick="switchView('yearly')">Year</button>
+        </div>
+      </div>
+      <div class="heatmap-nav" id="heatmap-nav">
+        <button class="nav-btn" onclick="navigateMonth(-1)">‹</button>
+        <span class="nav-label" id="nav-label">—</span>
+        <button class="nav-btn" onclick="navigateMonth(1)">›</button>
+      </div>
+      <div class="day-labels-row" id="day-labels-row">
+        <span class="day-lbl">S</span><span class="day-lbl">M</span><span class="day-lbl">T</span>
+        <span class="day-lbl">W</span><span class="day-lbl">T</span><span class="day-lbl">F</span><span class="day-lbl">S</span>
+      </div>
+      <div class="heatmap-grid" id="heatmap-grid"></div>
+      <div class="heatmap-legend">
+        <span class="legend-label">Less</span>
+        <div class="legend-cell" style="background:#0d1117;border:1px solid rgba(255,255,255,0.1)"></div>
+        <div class="legend-cell" style="background:#0e4429"></div>
+        <div class="legend-cell" style="background:#006d32"></div>
+        <div class="legend-cell" style="background:#26a641"></div>
+        <div class="legend-cell" style="background:#39d353"></div>
+        <span class="legend-label">More</span>
+      </div>
+    </div>
+    <div class="section-card">
+      <p class="section-title" style="margin-bottom:0.9rem">Last 7 Days</p>
+      <div id="weekly-bars" class="bar-chart"></div>
+    </div>
+    <div class="section-card">
+      <p class="section-title" style="margin-bottom:0.8rem">Insights</p>
+      <div class="insight-row"><span class="insight-icon">📅</span><span class="insight-text" id="top-day">Most focused day: —</span></div>
+      <div class="insight-row"><span class="insight-icon">⏰</span><span class="insight-text" id="top-hour">Most focused hour: —</span></div>
+    </div>
+  </main>
+  <script src="./js/history.js"></script>
 </body>
 </html>

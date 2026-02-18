@@ -1,29 +1,8 @@
 import { FocusTimer } from "./timer.js";
 
-
+// 
 // DOM ELEMENTS
-document.addEventListener("visibilitychange", () => {
-  if (sessionState !== "FOCUSING") return;
 
-  const mode = getFocusMode();
-  if (mode === "onscreen") return;
-
-  // ignore screen turning off, only care about tab switching
-  if (document.hidden) {
-    if (document.visibilityState === "hidden") {
-      // don't count as violation — could just be screen sleep
-      return;
-    }
-
-    violationCount++;
-    if (violationCount === 1) {
-      showToast("Stay focused 🌿 — tab switching is restricted", "warning");
-    } else {
-      failSession();
-      showToast("Focus broken. Plant damaged 🥀", "error");
-    }
-  }
-});
 const presetButtons = document.querySelectorAll(".preset-buttons button");
 const chooseTreeBtn = document.getElementById("choose-tree-btn");
 const currentTreeName = document.getElementById("current-tree-name");
@@ -162,7 +141,7 @@ function calculateTrees(minutes) {
   return minutes / 30;
 }
 
-// PRESET ACTIVE UI HELPER ✅ (THIS WAS MISSING)
+//  PRESET ACTIVE UI HELPER ✅ (THIS WAS MISSING)
 
 function setActivePreset(minutes) {
   presetButtons.forEach(btn => {
@@ -185,7 +164,7 @@ const DEFAULT_CATEGORIES = [
 
 
 // PLANT UI
- 
+
 
 function showCompletedTree(treeType) {
  const TREE_EMOJIS = {
@@ -243,14 +222,14 @@ function updatePlantUI() {
     plantStatus.textContent = "One full tree grown";
   } 
   else {
-  plantEl.textContent = `🌳`;
-  plantEl.classList.add("tree");
-  plantStatus.textContent = `${Math.floor(trees)} trees grown 🌿`;
-}
+    plantEl.textContent = `🌳 x ${Math.floor(trees)}`;
+    plantEl.classList.add("tree");
+    plantStatus.textContent = `${Math.floor(trees)} trees grown`;
+  }
 }
 
 function updateProgressRing(remainingSeconds) {
- if (!totalSessionSeconds || remainingSeconds === undefined) return;
+  if (!totalSessionSeconds) return;
 
   const progress =
     (totalSessionSeconds - remainingSeconds) / totalSessionSeconds;
@@ -342,10 +321,8 @@ function completeSession() {
 
   addCoins(sessionMinutes / 15);
 
- 
+  // 🔥 THIS WAS MISSING
   showCompletedTree(treeType);
-  launchConfetti();
-  setTimeout(() => showNoteModal(), 1500);
 
   startBtn.disabled = false;
   resetBtn.disabled = true;
@@ -456,6 +433,7 @@ function updateCoinUI() {
 }
 
 
+
 // EVENT LISTENERS
 
 startBtn.addEventListener("click", startSession);
@@ -506,59 +484,29 @@ minutesInput.addEventListener("change", () => {
 });
 
 
-// document.addEventListener("visibilitychange", () => {
-//   if (sessionState !== "FOCUSING") return;
-
-//   const mode = getFocusMode();
-
-//   // 💻 On-screen focus → allow tab switching
-//   if (mode === "onscreen") return;
-
-//   // 🌿 Off-screen focus → enforce discipline
-//   if (document.hidden) {
-//     violationCount++;
-
-//     if (violationCount === 1) {
-//       showToast(
-//         "Stay focused 🌿 — tab switching is restricted",
-//         "warning"
-//       );
-//     } else {
-//       failSession();
-//       showToast(
-//         "Focus broken. Plant damaged 🥀",
-//         "error"
-//       );
-//     }
-//   }
-// });
-let lastInteractionTime = Date.now();
-document.addEventListener("mousemove", () => lastInteractionTime = Date.now());
-document.addEventListener("keydown", () => lastInteractionTime = Date.now());
-document.addEventListener("click", () => lastInteractionTime = Date.now());
-
 document.addEventListener("visibilitychange", () => {
   if (sessionState !== "FOCUSING") return;
 
   const mode = getFocusMode();
 
-  // ✅ on-screen = working on laptop, tab switching allowed
+  // 💻 On-screen focus → allow tab switching
   if (mode === "onscreen") return;
 
-  // ✅ off-screen = away from laptop
+  // 🌿 Off-screen focus → enforce discipline
   if (document.hidden) {
-    const timeSinceInteraction = Date.now() - lastInteractionTime;
-
-    // if no interaction for 30+ seconds = screen probably slept, ignore
-    if (timeSinceInteraction > 30000) return;
-
-    // recent interaction = user actively switched tab = violation
     violationCount++;
+
     if (violationCount === 1) {
-      showToast("Stay focused 🌿 — tab switching is restricted", "warning");
+      showToast(
+        "Stay focused 🌿 — tab switching is restricted",
+        "warning"
+      );
     } else {
       failSession();
-      showToast("Focus broken. Plant damaged 🥀", "error");
+      showToast(
+        "Focus broken. Plant damaged 🥀",
+        "error"
+      );
     }
   }
 });
@@ -625,6 +573,7 @@ deleteCategoryBtn.addEventListener("click", () => {
 });
 
 
+
 // INITIAL RENDER
 
 const initialMinutes = loadPreferredMinutes();
@@ -632,13 +581,7 @@ totalSessionSeconds = initialMinutes * 60;
 
 minutesInput.value = initialMinutes;
 setActivePreset(initialMinutes);
-
 updateDisplay(totalSessionSeconds);
-const savedSessions = getStoredSessions();
-totalFocusedMinutes = savedSessions
-  .filter(s => s.success)
-  .reduce((sum, s) => sum + s.duration, 0);
 updatePlantUI();
 progressRing.style.strokeDashoffset = CIRCUMFERENCE;
 updateCoinUI();
-updateSelectedTreeLabel();

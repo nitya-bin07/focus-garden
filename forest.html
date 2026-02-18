@@ -5,12 +5,150 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Forest • Focus Garden</title>
   <link rel="stylesheet" href="./css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(ellipse at top, #0a1628, #020510);
+      color: #e5e7eb;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 5rem;
+    }
+
+    .page { max-width: 480px; margin: 0 auto; padding: 1rem 1.2rem; }
+
+    /* HEADER */
+    .forest-header {
+      text-align: center;
+      padding: 1.4rem 1rem 1rem;
+      position: relative;
+    }
+    .forest-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, #86efac, #22c55e, #16a34a);
+      background-clip: text; -webkit-background-clip: text;
+      color: transparent; -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .forest-header p { font-size: 0.82rem; color: #4b5563; margin-top: 0.3rem; }
+
+    /* STATS ROW */
+    .forest-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem; margin: 0.8rem 0 1rem;
+    }
+    .stat-pill {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 0.8rem 0.5rem;
+      text-align: center;
+    }
+    .stat-pill .sv {
+      font-size: 1.5rem; font-weight: 700;
+      color: #22c55e; display: block;
+      font-family: 'DM Serif Display', serif;
+    }
+    .stat-pill .sl {
+      font-size: 0.6rem; color: #4b5563;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      margin-top: 0.15rem; display: block;
+    }
+
+    /* FILTER TABS */
+    .filter-row {
+      display: flex; gap: 0.4rem;
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px; padding: 0.3rem 0.8rem;
+      font-size: 0.72rem; color: #6b7280; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s ease;
+    }
+    .filter-btn.active {
+      background: rgba(34,197,94,0.15);
+      border-color: rgba(34,197,94,0.4);
+      color: #22c55e; font-weight: 600;
+    }
+
+    /* FOREST GRID */
+    .forest-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+    }
+
+    .tree-tile {
+      aspect-ratio: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.2rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      position: relative;
+      animation: popIn 0.3s ease backwards;
+    }
+    .tree-tile:hover {
+      transform: translateY(-3px) scale(1.03);
+      border-color: rgba(34,197,94,0.3);
+      background: rgba(34,197,94,0.06);
+    }
+    .tree-tile .t-emoji { font-size: 1.8rem; line-height: 1; }
+    .tree-tile .t-dur {
+      font-size: 0.58rem; color: #4b5563;
+      font-weight: 500;
+    }
+
+    /* category dot */
+    .tree-tile .t-dot {
+      position: absolute; top: 0.4rem; right: 0.4rem;
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* TOOLTIP on hover */
+    .tree-tile[data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute; bottom: 105%; left: 50%;
+      transform: translateX(-50%);
+      background: #1e2d40; border: 1px solid rgba(255,255,255,0.1);
+      color: #e5e7eb; font-size: 0.62rem;
+      white-space: nowrap; padding: 0.3rem 0.6rem;
+      border-radius: 8px; pointer-events: none; z-index: 50;
+    }
+
+    /* EMPTY STATE */
+    .empty-forest {
+      grid-column: span 4; text-align: center;
+      padding: 3rem 1rem;
+    }
+    .empty-forest .e-icon { font-size: 3rem; opacity: 0.3; display: block; margin-bottom: 0.6rem; }
+    .empty-forest p { font-size: 0.85rem; color: #4b5563; }
+
+    /* CATEGORY COLOR MAP */
+    .cat-study   { background: #60a5fa; }
+    .cat-coding  { background: #a78bfa; }
+    .cat-reading { background: #34d399; }
+    .cat-workout { background: #f87171; }
+    .cat-meditation { background: #fbbf24; }
+    .cat-work    { background: #22c55e; }
+    .cat-creative { background: #f472b6; }
+    .cat-other   { background: #6b7280; }
+  </style>
 </head>
-<div id="toast" class="toast hidden"></div>
-
 <body>
-
-  <!-- NAV -->
   <nav class="app-nav">
     <a href="index.html">Focus</a>
     <a href="trees.html">Trees</a>
@@ -18,19 +156,117 @@
     <a href="history.html">History</a>
   </nav>
 
-  <main class="app-container">
- <div class="card"></div>
-    <header class="app-header">
+  <main class="page">
+    <header class="forest-header">
       <h1>Your Forest</h1>
-      <p>Every successful session grows a tree</p>
+      <p>Every session grows a tree 🌱</p>
     </header>
 
-    <section id="forest-grid" class="forest-grid">
-      <!-- Trees injected by JS -->
-    </section>
+    <!-- STATS -->
+    <div class="forest-stats">
+      <div class="stat-pill">
+        <span class="sv" id="stat-trees">0</span>
+        <span class="sl">Trees</span>
+      </div>
+      <div class="stat-pill">
+        <span class="sv" id="stat-hours">0</span>
+        <span class="sl">Hours</span>
+      </div>
+      <div class="stat-pill">
+        <span class="sv" id="stat-streak">0</span>
+        <span class="sl">🔥 Streak</span>
+      </div>
+    </div>
 
+    <!-- FILTER -->
+    <div class="filter-row" id="filter-row">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
+    </div>
+
+    <!-- GRID -->
+    <div class="forest-grid" id="forest-grid"></div>
   </main>
 
-  <script src="./js/forest.js"></script>
+  <script>
+    const TREE_EMOJIS = { oak:"🌳", pine:"🌲", cherry:"🌸", palm:"🌴", cactus:"🌵", maple:"🍁", bamboo:"🎋", bonsai:"🪴" };
+    const CAT_CLASS = { study:"cat-study", coding:"cat-coding", reading:"cat-reading", workout:"cat-workout", meditation:"cat-meditation", work:"cat-work", creative:"cat-creative" };
+
+    const sessions = JSON.parse(localStorage.getItem("focusSessions")) || [];
+    const successful = sessions.filter(s => s.success);
+
+    // STATS
+    const totalMins = successful.reduce((s, x) => s + x.duration, 0);
+    document.getElementById("stat-trees").textContent = successful.length;
+    document.getElementById("stat-hours").textContent = (totalMins / 60).toFixed(1);
+
+    // streak
+    const today = new Date(); today.setHours(0,0,0,0);
+    const uniqueDays = [...new Set(successful.map(s => s.date))].sort();
+    const dayDates = uniqueDays.map(d => { const dt = new Date(d); dt.setHours(0,0,0,0); return dt; });
+    let streak = 0, sd = new Date(today);
+    for (let i = dayDates.length - 1; i >= 0; i--) {
+      const diff = Math.floor((sd - dayDates[i]) / 86400000);
+      if (diff === 0 || diff === 1) { streak++; sd = new Date(dayDates[i]); } else break;
+    }
+    document.getElementById("stat-streak").textContent = streak || "—";
+
+    // FILTER BUTTONS — build from unique categories
+    const categories = [...new Set(successful.map(s => s.category).filter(Boolean))];
+    const filterRow = document.getElementById("filter-row");
+    categories.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = "filter-btn";
+      btn.dataset.filter = cat.toLowerCase();
+      btn.textContent = cat;
+      btn.onclick = () => setFilter(cat.toLowerCase(), btn);
+      filterRow.appendChild(btn);
+    });
+
+    let activeFilter = "all";
+    function setFilter(f, btn) {
+      activeFilter = f;
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderGrid();
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById("forest-grid");
+      grid.innerHTML = "";
+
+      const filtered = activeFilter === "all"
+        ? successful
+        : successful.filter(s => (s.category || "").toLowerCase() === activeFilter);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-forest">
+            <span class="e-icon">🌱</span>
+            <p>No trees yet. Start focusing!</p>
+          </div>`;
+        return;
+      }
+
+      // newest first
+      [...filtered].reverse().forEach((s, i) => {
+        const tile = document.createElement("div");
+        tile.className = "tree-tile";
+        tile.style.animationDelay = `${i * 0.04}s`;
+
+        const catKey = (s.category || "other").toLowerCase();
+        const dotClass = CAT_CLASS[catKey] || "cat-other";
+
+        tile.setAttribute("data-tip", `${s.date} · ${s.duration}min · ${s.category || "—"}${s.note ? " · " + s.note : ""}`);
+        tile.innerHTML = `
+          <div class="t-dot ${dotClass}"></div>
+          <span class="t-emoji">${TREE_EMOJIS[s.treeType] || "🌳"}</span>
+          <span class="t-dur">${s.duration}m</span>
+        `;
+        grid.appendChild(tile);
+      });
+    }
+
+    renderGrid();
+  </script>
 </body>
 </html>

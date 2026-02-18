@@ -5,12 +5,136 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Select Tree • Focus Garden</title>
   <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    .shop-header {
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .coin-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fde68a;
+      margin-bottom: 0.5rem;
+    }
+
+    .shop-subtitle {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    .tree-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .tree-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 1rem 0.4rem 0.8rem;
+      font-size: 1.8rem;
+      color: #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .tree-card:hover:not(:disabled) {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .tree-card.active {
+      background: rgba(34, 197, 94, 0.12);
+      border-color: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+    }
+
+    .tree-card.locked {
+      opacity: 0.6;
+      cursor: pointer;
+    }
+
+    .tree-card.locked:hover {
+      transform: translateY(-3px);
+      border-color: rgba(250, 204, 21, 0.4);
+    }
+
+    .tree-name {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+
+    /* price badge on locked trees */
+    .price-badge {
+      font-size: 0.65rem;
+      background: rgba(250, 204, 21, 0.15);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      color: #fde68a;
+      border-radius: 999px;
+      padding: 0.15rem 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    /* owned badge on unlocked trees */
+    .owned-badge {
+      font-size: 0.6rem;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #86efac;
+      border-radius: 999px;
+      padding: 0.15rem 0.5rem;
+    }
+
+    /* selected badge */
+    .selected-badge {
+      font-size: 0.6rem;
+      background: rgba(34, 197, 94, 0.25);
+      border: 1px solid #22c55e;
+      color: #22c55e;
+      border-radius: 999px;
+      padding: 0.15rem 0.5rem;
+      font-weight: 600;
+    }
+
+    /* lock icon on top right */
+    .lock-icon {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.5rem;
+      font-size: 0.7rem;
+      opacity: 0.6;
+    }
+
+    .status-text {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
+
 <div id="toast" class="toast hidden"></div>
 
 <body>
-
-  <!-- NAV -->
   <nav class="app-nav">
     <a href="index.html">Focus</a>
     <a href="trees.html">Trees</a>
@@ -18,120 +142,165 @@
     <a href="history.html">History</a>
   </nav>
 
-  <main class="app-container">
-    <div class="coin-badge">
-       <div class="card"></div>
-  🪙 <span class="coin-count">0</span>
-</div>
-
+  <main class="app-container" style="padding-bottom: 5rem;">
     <header class="app-header">
-      <h1>Select Your Tree</h1>
-      <p>This tree will grow during your focus session</p>
+      <h1>Tree Shop</h1>
+      <p>Spend coins to unlock new trees</p>
     </header>
 
-   <section class="tree-grid">
+    <div class="shop-header">
+     <div class="coin-display">
+  <div class="coin-circle">🪙</div>
+  <span id="coin-count">0</span> coins
+</div>
+      <p class="shop-subtitle">Earn 1 coin per 15 min of focus</p>
+    </div>
 
-  <!-- FREE TREES -->
-  <button class="tree-card" data-tree="oak" data-price="0">
-    🌳 <span>Oak</span>
-  </button>
+    <section class="tree-grid" id="tree-grid"></section>
 
-  <button class="tree-card" data-tree="pine" data-price="0">
-    🌲 <span>Pine</span>
-  </button>
-
-  <button class="tree-card" data-tree="cherry" data-price="0">
-    🌸 <span>Cherry</span>
-  </button>
-
-  <!-- LOCKED TREES -->
-  <button class="tree-card locked" data-tree="palm" data-price="5">
-    🌴 <span>Palm</span>
-  </button>
-
-  <button class="tree-card locked" data-tree="cactus" data-price="5">
-    🌵 <span>Cactus</span>
-  </button>
-
-  <button class="tree-card locked" data-tree="maple" data-price="8">
-    🍁 <span>Maple</span>
-  </button>
-
-  <button class="tree-card locked" data-tree="bamboo" data-price="10">
-    🎋 <span>Bamboo</span>
-  </button>
-
-  <button class="tree-card locked" data-tree="bonsai" data-price="12">
-    🪴 <span>Bonsai</span>
-  </button>
-
-</section>
-
-
-    <p class="plant-status">Selected tree will be used on Focus page</p>
+    <p class="status-text" id="status-text">Tap a locked tree to unlock it</p>
   </main>
-<script>
-  const treeButtons = document.querySelectorAll(".tree-card");
 
-  function getUnlockedTrees() {
-    return JSON.parse(localStorage.getItem("unlockedTrees")) || ["oak", "pine", "cherry"];
-  }
+  <script>
+    const TREES = [
+      { id: "oak",    emoji: "🌳", name: "Oak",    price: 0  },
+      { id: "pine",   emoji: "🌲", name: "Pine",   price: 0  },
+      { id: "cherry", emoji: "🌸", name: "Cherry", price: 0  },
+      { id: "palm",   emoji: "🌴", name: "Palm",   price: 5  },
+      { id: "cactus", emoji: "🌵", name: "Cactus", price: 5  },
+      { id: "maple",  emoji: "🍁", name: "Maple",  price: 8  },
+      { id: "bamboo", emoji: "🎋", name: "Bamboo", price: 10 },
+      { id: "bonsai", emoji: "🪴", name: "Bonsai", price: 12 },
+    ];
 
-  function saveUnlockedTrees(list) {
-    localStorage.setItem("unlockedTrees", JSON.stringify(list));
-  }
-
-  function getCoins() {
-    return Number(localStorage.getItem("coins")) || 0;
-  }
-
-  function updateCoinsUI() {
-    document.querySelector(".coin-count").textContent = getCoins();
-  }
-
-  const unlocked = getUnlockedTrees();
-
-  treeButtons.forEach(btn => {
-    const tree = btn.dataset.tree;
-    const price = Number(btn.dataset.price);
-
-    if (unlocked.includes(tree)) {
-      btn.classList.remove("locked");
+    function getCoins() {
+      return Number(localStorage.getItem("coins")) || 0;
     }
 
-    btn.addEventListener("click", () => {
-      const unlockedTrees = getUnlockedTrees();
+    function getUnlockedTrees() {
+      return JSON.parse(localStorage.getItem("unlockedTrees")) || ["oak", "pine", "cherry"];
+    }
 
-      if (unlockedTrees.includes(tree)) {
-        localStorage.setItem("selectedTree", tree);
-        treeButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
+    function saveUnlockedTrees(list) {
+      localStorage.setItem("unlockedTrees", JSON.stringify(list));
+    }
+
+    function getSelectedTree() {
+      return localStorage.getItem("selectedTree") || "oak";
+    }
+
+    function updateCoinDisplay() {
+      document.getElementById("coin-count").textContent = getCoins();
+    }
+
+    function showToast(message, type = "success") {
+      const toast = document.getElementById("toast");
+      if (!toast) return;
+      toast.textContent = message;
+      toast.className = `toast ${type} show`;
+      setTimeout(() => toast.classList.remove("show"), 2500);
+    }
+
+    function renderTrees() {
+      const grid = document.getElementById("tree-grid");
+      grid.innerHTML = "";
+
+      const unlocked = getUnlockedTrees();
+      const selected = getSelectedTree();
+
+      TREES.forEach(tree => {
+        const isUnlocked = unlocked.includes(tree.id);
+        const isSelected = selected === tree.id;
+
+        const btn = document.createElement("button");
+        btn.className = "tree-card";
+        if (!isUnlocked) btn.classList.add("locked");
+        if (isSelected) btn.classList.add("active");
+
+        // lock icon top right for locked trees
+        if (!isUnlocked) {
+          const lockEl = document.createElement("span");
+          lockEl.className = "lock-icon";
+          lockEl.textContent = "🔒";
+          btn.appendChild(lockEl);
+        }
+
+        // emoji
+        const emojiEl = document.createElement("span");
+        emojiEl.textContent = tree.emoji;
+        btn.appendChild(emojiEl);
+
+        // name
+        const nameEl = document.createElement("span");
+        nameEl.className = "tree-name";
+        nameEl.textContent = tree.name;
+        btn.appendChild(nameEl);
+
+        // badge
+        const badge = document.createElement("span");
+        if (isSelected) {
+          badge.className = "selected-badge";
+          badge.textContent = "✓ Selected";
+        } else if (isUnlocked) {
+          badge.className = "owned-badge";
+          badge.textContent = "Owned";
+        } else {
+          badge.className = "price-badge";
+          badge.textContent = `🪙 ${tree.price}`;
+        }
+        btn.appendChild(badge);
+
+        btn.addEventListener("click", () => handleTreeClick(tree));
+        grid.appendChild(btn);
+      });
+    }
+
+    function handleTreeClick(tree) {
+      const unlocked = getUnlockedTrees();
+
+      // already unlocked → just select it
+      if (unlocked.includes(tree.id)) {
+        localStorage.setItem("selectedTree", tree.id);
+        renderTrees();
+        showToast(`${tree.name} selected! ${tree.emoji}`, "success");
+        document.getElementById("status-text").textContent =
+          `${tree.emoji} ${tree.name} will grow in your next session`;
         return;
       }
 
-      if (getCoins() < price) {
-        showToast("Not enough coins 🪙", "error")
+      // not enough coins
+      if (getCoins() < tree.price) {
+        showToast(`Need ${tree.price} coins to unlock ${tree.name} 🪙`, "error");
         return;
       }
 
-      // Unlock
-      const remaining = getCoins() - price;
+      // unlock it
+      const remaining = getCoins() - tree.price;
       localStorage.setItem("coins", remaining);
 
-      unlockedTrees.push(tree);
-      saveUnlockedTrees(unlockedTrees);
+      unlocked.push(tree.id);
+      saveUnlockedTrees(unlocked);
 
-      btn.classList.remove("locked");
-      btn.classList.add("active");
-      localStorage.setItem("selectedTree", tree);
+      localStorage.setItem("selectedTree", tree.id);
 
-      updateCoinsUI();
-    });
-  });
+      updateCoinDisplay();
+      renderTrees();
 
-  updateCoinsUI();
-</script>
+      showToast(`${tree.name} unlocked! ${tree.emoji}`, "success");
+      document.getElementById("status-text").textContent =
+        `${tree.emoji} ${tree.name} unlocked and selected!`;
+    }
 
+    // init
+    updateCoinDisplay();
+    renderTrees();
 
+    const selected = getSelectedTree();
+    const selectedTree = TREES.find(t => t.id === selected);
+    if (selectedTree) {
+      document.getElementById("status-text").textContent =
+        `${selectedTree.emoji} ${selectedTree.name} will grow in your next session`;
+    }
+  </script>
 </body>
 </html>

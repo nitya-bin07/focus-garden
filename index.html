@@ -5,12 +5,222 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Focus Garden</title>
   <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    /* ── COIN BADGE ── */
+    .coin-badge {
+      position: fixed;
+      top: 1rem;
+      right: 1.2rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 0.25rem 0.8rem 0.25rem 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 200;
+    }
+    .coin-circle {
+      width: 28px; height: 28px;
+      background: radial-gradient(circle at 35% 35%, #fde68a, #f59e0b);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+      box-shadow: 0 0 8px rgba(245,158,11,0.6), 0 0 16px rgba(245,158,11,0.3);
+      animation: coinShine 2s ease-in-out infinite;
+    }
+    @keyframes coinShine {
+      0%,100% { box-shadow: 0 0 8px rgba(245,158,11,0.6), 0 0 16px rgba(245,158,11,0.3); }
+      50%      { box-shadow: 0 0 14px rgba(245,158,11,0.9), 0 0 28px rgba(245,158,11,0.5); }
+    }
+    .coin-count { font-weight: 600; color: #fde68a; font-size: 0.8rem; }
+
+    /* ── LAYOUT ── */
+    .app-container {
+      width: 100%; max-width: 420px;
+      margin: 0 auto;
+      padding: 1.4rem 1.4rem 6rem;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 1.2rem;
+    }
+
+    /* ── HEADER ── */
+    .app-header {
+      width: 100%; text-align: center;
+      padding: 1rem 1.4rem 0.8rem;
+      background: linear-gradient(135deg, rgba(18,28,48,0.9), rgba(8,12,22,0.85));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+    }
+    .app-header h1 {
+      font-size: 1.8rem; font-weight: 700;
+      background-image: linear-gradient(90deg, #7CFF9B, #3EDC81);
+      background-clip: text; -webkit-background-clip: text;
+      color: transparent; -webkit-text-fill-color: transparent;
+    }
+    .app-header p { font-size: 0.8rem; color: rgba(220,230,255,0.6); margin-top: 4px; }
+
+    /* ── TIMER CARD ── */
+    .timer-card {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 24px;
+      padding: 1.4rem 1rem 1rem;
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    }
+
+    .timer-wrapper {
+      position: relative; width: 180px; height: 180px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .progress-ring { position: absolute; transform: rotate(-90deg); }
+    .progress-ring-fill { transition: stroke-dashoffset 0.3s linear; }
+    .timer-display {
+      font-size: 1.8rem; font-weight: 700;
+      background: rgba(255,255,255,0.07);
+      padding: 0.4rem 0.9rem; border-radius: 10px;
+      letter-spacing: 1px;
+    }
+
+    /* presets */
+    .preset-buttons {
+      display: flex; flex-wrap: wrap;
+      justify-content: center; gap: 0.35rem;
+      width: 100%;
+    }
+    .preset-buttons button {
+      background: rgba(255,255,255,0.06);
+      border: none; color: #e5e7eb;
+      border-radius: 6px; padding: 0.3rem 0.6rem;
+      font-size: 0.75rem; cursor: pointer;
+    }
+    .preset-buttons button.active {
+      background: #22c55e; color: #022c22; font-weight: 600;
+    }
+
+    #minutes-input {
+      width: 100%; padding: 0.4rem;
+      background: rgba(255,255,255,0.06);
+      border: none; border-radius: 8px;
+      color: #e5e7eb; text-align: center;
+    }
+
+    .warning-message {
+      color: #facc15; font-size: 0.75rem;
+      min-height: 1rem; text-align: center;
+    }
+
+    /* ── CONTROLS ── */
+    .controls {
+      display: flex; gap: 0.6rem; width: 100%;
+    }
+    #start-btn {
+      flex: 2;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #022c22; border: none; border-radius: 12px;
+      padding: 0.7rem; font-weight: 700; font-size: 1rem; cursor: pointer;
+    }
+    #reset-btn {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      border: none; border-radius: 12px;
+      color: #e5e7eb; cursor: pointer; font-size: 0.85rem;
+    }
+
+    /* ── PLANT ── */
+    .plant-card {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+    .plant { font-size: 2.8rem; display: block; transition: transform 0.6s ease, opacity 0.6s ease; }
+    .plant.seed { opacity: 0.4; transform: scale(0.6); }
+    .plant.sprout { opacity: 0.7; transform: scale(0.85); }
+    .plant.tree { opacity: 1; transform: scale(1.1); }
+    .plant.failed { opacity: 0.3; transform: rotate(-15deg) scale(0.9); filter: grayscale(100%); }
+    .plant-status { font-size: 0.75rem; opacity: 0.5; margin-top: 0.4rem; }
+
+    @keyframes growPulse {
+      0% { transform: scale(0.9); } 50% { transform: scale(1.2); } 100% { transform: scale(1); }
+    }
+    .plant.growing { animation: growPulse 0.6s ease; }
+
+    /* ── SETTINGS ROW ── */
+    .settings-row {
+      width: 100%;
+      display: flex; gap: 0.6rem;
+    }
+    .settings-row button {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      color: #9ca3af; font-size: 0.75rem;
+      padding: 0.55rem 0.3rem;
+      cursor: pointer; display: flex;
+      flex-direction: column; align-items: center; gap: 0.2rem;
+    }
+    .settings-row button:hover { background: rgba(255,255,255,0.1); color: #e5e7eb; }
+    .settings-row button span.icon { font-size: 1.1rem; }
+
+    /* ── SETTINGS PANEL ── */
+    .settings-panel {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 1rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .settings-panel.open { display: flex; }
+
+    .settings-panel h3 {
+      font-size: 0.8rem; color: #6b7280;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 0.2rem;
+    }
+
+    /* focus mode */
+    .focus-mode { display: flex; flex-direction: column; gap: 0.4rem; }
+    .mode-option {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.8rem; cursor: pointer;
+    }
+    .mode-option input { accent-color: #22c55e; }
+
+    /* category */
+    .category-select {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 0.5rem 0.8rem;
+      color: #e5e7eb; font-size: 0.85rem;
+      appearance: none; cursor: pointer; outline: none;
+    }
+    .category-actions {
+      display: flex; gap: 0.5rem;
+    }
+    .cat-btn {
+      flex: 1; background: rgba(255,255,255,0.06);
+      border: none; border-radius: 8px;
+      padding: 0.4rem; color: #9ca3af;
+      font-size: 0.75rem; cursor: pointer;
+    }
+    .cat-btn.danger { color: #fca5a5; }
+    .cat-btn:hover { background: rgba(255,255,255,0.12); }
+  </style>
 </head>
+
 <div id="toast" class="toast hidden"></div>
 
 <body>
-
-  <!-- NAV -->
   <nav class="app-nav">
     <a href="index.html">Focus</a>
     <a href="trees.html">Trees</a>
@@ -18,11 +228,13 @@
     <a href="history.html">History</a>
   </nav>
 
+  <!-- COIN -->
+  <div class="coin-badge">
+    <div class="coin-circle">🪙</div>
+    <span class="coin-count">0</span>
+  </div>
+
   <main class="app-container">
-<div class="coin-badge">
-   <div class="card"></div>
-  🪙 <span class="coin-count">0</span>
-</div>
 
     <!-- HEADER -->
     <header class="app-header">
@@ -30,48 +242,20 @@
       <p>Grow focus. Kill distraction.</p>
     </header>
 
-    <!-- TIMER -->
-    <section class="timer-section">
+    <!-- TIMER CARD -->
+    <div class="timer-card">
       <div class="timer-wrapper">
         <svg class="progress-ring" width="180" height="180">
-          <circle
-            class="progress-ring-bg"
-            stroke="#1e293b"
-            stroke-width="8"
-            fill="transparent"
-            r="80"
-            cx="90"
-            cy="90"
-          />
-          <circle
-            class="progress-ring-fill"
-            stroke="#22c55e"
-            stroke-width="8"
-            fill="transparent"
-            r="80"
-            cx="90"
-            cy="90"
-          />
+          <circle class="progress-ring-bg" stroke="#1e293b" stroke-width="8"
+            fill="transparent" r="80" cx="90" cy="90"/>
+          <circle class="progress-ring-fill" stroke="#22c55e" stroke-width="8"
+            fill="transparent" r="80" cx="90" cy="90"/>
         </svg>
-
         <div class="timer-display ring-timer">15:00</div>
       </div>
-    </section>
 
-    <!-- CONTROLS -->
-    <section class="control-section">
+      <input type="number" id="minutes-input" min="15" max="240" step="15" value="15"/>
 
-      <!-- TIME INPUT -->
-      <input
-        type="number"
-        id="minutes-input"
-        min="15"
-        max="240"
-        step="15"
-        value="15"
-      />
-
-      <!-- PRESETS -->
       <div class="preset-buttons">
         <button data-min="15">15</button>
         <button data-min="30">30</button>
@@ -82,66 +266,152 @@
         <button data-min="240">240</button>
       </div>
 
-      <!-- WARNING -->
       <p class="warning-message"></p>
 
-      <!-- TREE SELECT -->
-      <p class="plant-status">
-        Selected tree: <span id="current-tree-name"></span>
-      </p>
-<div class="focus-mode">
-  <p class="mode-label">Focus Mode</p>
-
-  <label class="mode-option">
-    <input type="radio" name="focus-mode" value="offscreen" checked />
-    🌿 Off-Screen (No tab switching)
-  </label>
-
-  <label class="mode-option">
-    <input type="radio" name="focus-mode" value="onscreen" />
-    💻 On-Screen (Tabs allowed)
-  </label>
-  
-</div>
-<br>
-      <select id="category-select" class="category-select">
-      <option value="">Select category</option>
-      <option value="Study">📚 Study</option>
-      <option value="Coding">💻 Coding</option>
-      <option value="Reading">📖 Reading</option>
-      <option value="Workout">🏋️ Workout</option>
-      <option value="Meditation">🧘 Meditation</option>
-      <option value="Work">🧠 Work</option>
-      <option value="Creative">🎨 Creative</option>
-    </select>
-<br><br>
-    <button id="add-category-btn" class="secondary-btn">
-      ➕ Add Category
-    </button>
-    <button id="delete-category-btn" class="secondary-btn danger">
-      🗑 Delete Category
-    </button>
-
-
-    <button id="choose-tree-btn" class="secondary-btn">
-      🌱 Choose Tree
-    </button>
-
-    <!-- START / RESET -->
-    <div class="controls">
-      <button id="start-btn">Start Focus</button>
-      <button id="reset-btn" disabled>Reset</button>
+      <div class="controls">
+        <button id="start-btn">Start Focus</button>
+        <button id="reset-btn" disabled>Reset</button>
+      </div>
     </div>
 
-    </section>
-
     <!-- PLANT -->
-    <section class="growth-section">
-      <div id="plant" class="plant seed">🌰</div>
+    <div class="plant-card">
+      <span id="plant" class="plant seed">🌰</span>
       <p class="plant-status">Start focusing to grow your plant</p>
-    </section>
+    </div>
 
+    <!-- SETTINGS ROW — 3 quick access buttons -->
+    <div class="settings-row">
+      <button id="btn-mode" onclick="togglePanel('mode-panel')">
+        <span class="icon">🎯</span>
+        <span>Focus Mode</span>
+      </button>
+      <button id="btn-category" onclick="togglePanel('category-panel')">
+        <span class="icon">📂</span>
+        <span>Category</span>
+      </button>
+      <button id="choose-tree-btn">
+        <span class="icon">🌱</span>
+        <span id="current-tree-name">Choose Tree</span>
+      </button>
+    </div>
+
+    <!-- FOCUS MODE PANEL -->
+    <div class="settings-panel" id="mode-panel">
+      <h3>Focus Mode</h3>
+      <div class="focus-mode">
+        <label class="mode-option">
+          <input type="radio" name="focus-mode" value="offscreen" checked />
+          🌿 Off-Screen (No tab switching)
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="focus-mode" value="onscreen" />
+          💻 On-Screen (Tabs allowed)
+        </label>
+      </div>
+    </div>
+
+    <!-- CATEGORY PANEL -->
+    <div class="settings-panel" id="category-panel">
+      <h3>Category</h3>
+      <select id="category-select" class="category-select">
+        <option value="">Select category</option>
+      </select>
+      <div class="category-actions">
+        <button class="cat-btn" id="add-category-btn">➕ Add</button>
+        <button class="cat-btn danger" id="delete-category-btn">🗑 Delete</button>
+      </div>
+    </div>
+
+    <!-- SESSION NOTE MODAL -->
+<div id="note-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:998; align-items:center; justify-content:center;">
+  <div style="background:#0f172a; border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:1.5rem; width:90%; max-width:340px; display:flex; flex-direction:column; gap:0.8rem;">
+    <p style="font-size:1rem; font-weight:600; color:#86efac;">🌳 Session Complete!</p>
+    <p style="font-size:0.8rem; color:#6b7280;">What did you accomplish this session?</p>
+    <textarea id="session-note-input" placeholder="e.g. Finished chapter 3, built the timer feature..." style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:0.7rem; color:#e5e7eb; font-size:0.82rem; resize:none; height:80px; outline:none; font-family:inherit;"></textarea>
+    <div style="display:flex; gap:0.6rem;">
+      <button id="note-skip-btn" style="flex:1; background:rgba(255,255,255,0.06); border:none; border-radius:10px; padding:0.6rem; color:#6b7280; cursor:pointer; font-size:0.8rem;">Skip</button>
+      <button id="note-save-btn" style="flex:2; background:linear-gradient(135deg,#22c55e,#16a34a); border:none; border-radius:10px; padding:0.6rem; color:#022c22; font-weight:700; cursor:pointer; font-size:0.8rem;">Save Note ✓</button>
+    </div>
+  </div>
+</div>
   </main>
+
+  <canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;"></canvas>
+
+  <script>
+    function togglePanel(id) {
+      const panel = document.getElementById(id);
+      const isOpen = panel.classList.contains("open");
+      // close all panels first
+      document.querySelectorAll(".settings-panel").forEach(p => p.classList.remove("open"));
+      // open if it wasn't open
+      if (!isOpen) panel.classList.add("open");
+    }
+ 
+      function showNoteModal() {
+      const modal = document.getElementById("note-modal");
+      modal.style.display = "flex";
+      document.getElementById("session-note-input").value = "";
+      document.getElementById("session-note-input").focus();
+    }
+
+    function closeNoteModal(saveNote) {
+      const modal = document.getElementById("note-modal");
+      modal.style.display = "none";
+
+      if (saveNote) {
+        const note = document.getElementById("session-note-input").value.trim();
+        if (note) {
+          // attach note to the last saved session
+          const sessions = JSON.parse(localStorage.getItem("focusSessions")) || [];
+          if (sessions.length > 0) {
+            sessions[sessions.length - 1].note = note;
+            localStorage.setItem("focusSessions", JSON.stringify(sessions));
+          }
+        }
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("note-save-btn").addEventListener("click", () => closeNoteModal(true));
+      document.getElementById("note-skip-btn").addEventListener("click", () => closeNoteModal(false));
+    });
+
+    function launchConfetti() {
+      const canvas = document.getElementById("confetti-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const pieces = Array.from({ length: 120 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * -canvas.height,
+        w: Math.random() * 10 + 5,
+        h: Math.random() * 5 + 3,
+        color: ["#22c55e","#86efac","#fde68a","#a78bfa","#60a5fa","#f472b6"][Math.floor(Math.random()*6)],
+        speed: Math.random() * 4 + 2,
+        angle: Math.random() * 360,
+        spin: Math.random() * 4 - 2,
+        drift: Math.random() * 2 - 1
+      }));
+      let frame, elapsed = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        elapsed++;
+        pieces.forEach(p => {
+          p.y += p.speed; p.x += p.drift; p.angle += p.spin;
+          ctx.save(); ctx.translate(p.x, p.y);
+          ctx.rotate((p.angle * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+          ctx.restore();
+        });
+        if (elapsed < 180) { frame = requestAnimationFrame(draw); }
+        else { ctx.clearRect(0,0,canvas.width,canvas.height); cancelAnimationFrame(frame); }
+      }
+      draw();
+    }
+  </script>
 
   <script type="module" src="./js/app.js"></script>
 </body>
