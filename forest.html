@@ -5,75 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Forest • Focus Garden</title>
   <link rel="stylesheet" href="./css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230e1712%27/%3E%3Cpath d=%27M16 6 10 18h3l-4 8h14l-4-8h3z%27 fill=%27%238fe3a8%27/%3E%3C/svg%3E" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: radial-gradient(ellipse at top, #0a1628, #020510);
-      color: #e5e7eb;
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-      padding-bottom: 5rem;
-    }
+    .page { max-width: 480px; margin: 0 auto; padding: 1.5rem 1.3rem 6.5rem; }
 
-    .page { max-width: 480px; margin: 0 auto; padding: 1rem 1.2rem; }
-
-    /* HEADER */
-    .forest-header {
-      text-align: center;
-      padding: 1.4rem 1rem 1rem;
-      position: relative;
-    }
-    .forest-header h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 2.2rem;
-      background: linear-gradient(135deg, #86efac, #22c55e, #16a34a);
-      background-clip: text; -webkit-background-clip: text;
-      color: transparent; -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
-    }
-    .forest-header p { font-size: 0.82rem; color: #4b5563; margin-top: 0.3rem; }
+    .forest-header { text-align: center; margin-bottom: 1rem; }
+    .forest-header p { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.3rem; }
 
     /* STATS ROW */
     .forest-stats {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 0.6rem; margin: 0.8rem 0 1rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+      margin: 0 0 1.1rem;
     }
+
     .stat-pill {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 0.8rem 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 0.85rem 0.5rem;
       text-align: center;
     }
+
     .stat-pill .sv {
-      font-size: 1.5rem; font-weight: 700;
-      color: #22c55e; display: block;
-      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--glow);
+      display: block;
+      font-family: var(--font-display);
     }
+
     .stat-pill .sl {
-      font-size: 0.6rem; color: #4b5563;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      margin-top: 0.15rem; display: block;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-top: 0.15rem;
+      display: block;
     }
 
     /* FILTER TABS */
-    .filter-row {
-      display: flex; gap: 0.4rem;
-      margin-bottom: 1rem; flex-wrap: wrap;
-    }
+    .filter-row { display: flex; gap: 0.4rem; margin-bottom: 1.1rem; flex-wrap: wrap; }
+
     .filter-btn {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 999px; padding: 0.3rem 0.8rem;
-      font-size: 0.72rem; color: #6b7280; cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.32rem 0.85rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-body);
       transition: all 0.15s ease;
     }
+
     .filter-btn.active {
-      background: rgba(34,197,94,0.15);
-      border-color: rgba(34,197,94,0.4);
-      color: #22c55e; font-weight: 600;
+      background: var(--glow-soft);
+      border-color: var(--glow);
+      color: var(--glow);
+      font-weight: 700;
     }
 
     /* FOREST GRID */
@@ -85,32 +76,40 @@
 
     .tree-tile {
       aspect-ratio: 1;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       gap: 0.2rem;
       cursor: pointer;
       transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
       position: relative;
       animation: popIn 0.3s ease backwards;
     }
+
     .tree-tile:hover {
-      transform: translateY(-3px) scale(1.03);
-      border-color: rgba(34,197,94,0.3);
-      background: rgba(34,197,94,0.06);
-    }
-    .tree-tile .t-emoji { font-size: 1.8rem; line-height: 1; }
-    .tree-tile .t-dur {
-      font-size: 0.58rem; color: #4b5563;
-      font-weight: 500;
+      transform: translateY(-3px) scale(1.05) rotate(-2deg);
+      border-color: var(--border-strong);
+      background: var(--surface-hover);
     }
 
-    /* category dot */
+    .tree-tile:nth-child(2n):hover {
+      transform: translateY(-3px) scale(1.05) rotate(2deg);
+    }
+
+    .tree-tile .t-emoji { font-size: 1.8rem; line-height: 1; }
+    .tree-tile .t-dur { font-size: 0.58rem; color: var(--text-muted); font-weight: 500; font-family: var(--font-mono); }
+
     .tree-tile .t-dot {
-      position: absolute; top: 0.4rem; right: 0.4rem;
-      width: 6px; height: 6px; border-radius: 50%;
+      position: absolute;
+      top: 0.4rem;
+      right: 0.4rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
     }
 
     @keyframes popIn {
@@ -118,46 +117,43 @@
       to   { opacity: 1; transform: scale(1); }
     }
 
-    /* TOOLTIP on hover */
     .tree-tile[data-tip]:hover::after {
       content: attr(data-tip);
-      position: absolute; bottom: 105%; left: 50%;
+      position: absolute;
+      bottom: 108%;
+      left: 50%;
       transform: translateX(-50%);
-      background: #1e2d40; border: 1px solid rgba(255,255,255,0.1);
-      color: #e5e7eb; font-size: 0.62rem;
-      white-space: nowrap; padding: 0.3rem 0.6rem;
-      border-radius: 8px; pointer-events: none; z-index: 50;
+      background: var(--bg-canopy-1);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-size: 0.62rem;
+      font-family: var(--font-body);
+      white-space: nowrap;
+      padding: 0.32rem 0.65rem;
+      border-radius: var(--r-sm);
+      pointer-events: none;
+      z-index: 50;
     }
 
     /* EMPTY STATE */
-    .empty-forest {
-      grid-column: span 4; text-align: center;
-      padding: 3rem 1rem;
-    }
-    .empty-forest .e-icon { font-size: 3rem; opacity: 0.3; display: block; margin-bottom: 0.6rem; }
-    .empty-forest p { font-size: 0.85rem; color: #4b5563; }
+    .empty-forest { grid-column: span 4; text-align: center; padding: 3rem 1rem; }
+    .empty-forest .e-icon { font-size: 3rem; opacity: 0.4; display: block; margin-bottom: 0.6rem; }
+    .empty-forest p { font-size: 0.85rem; color: var(--text-muted); }
 
-    /* CATEGORY COLOR MAP */
-    .cat-study   { background: #60a5fa; }
-    .cat-coding  { background: #a78bfa; }
-    .cat-reading { background: #34d399; }
-    .cat-workout { background: #f87171; }
-    .cat-meditation { background: #fbbf24; }
-    .cat-work    { background: #22c55e; }
-    .cat-creative { background: #f472b6; }
-    .cat-other   { background: #6b7280; }
+    /* CATEGORY COLOR MAP — muted, botanical hues, each still distinguishable */
+    .cat-study      { background: #7fb2d9; }
+    .cat-coding     { background: #b79ee8; }
+    .cat-reading    { background: #e8b972; }
+    .cat-workout    { background: #e2786a; }
+    .cat-meditation { background: #f0d189; }
+    .cat-work       { background: #8fe3a8; }
+    .cat-creative   { background: #e79bb8; }
+    .cat-other      { background: #7d8f80; }
   </style>
 </head>
 <body>
-  <nav class="app-nav">
-    <a href="index.html">Focus</a>
-    <a href="trees.html">Trees</a>
-    <a href="forest.html">Forest</a>
-    <a href="history.html">History</a>
-  </nav>
-
   <main class="page">
-    <header class="forest-header">
+    <header class="forest-header app-header">
       <h1>Your Forest</h1>
       <p>Every session grows a tree 🌱</p>
     </header>
@@ -186,6 +182,13 @@
     <!-- GRID -->
     <div class="forest-grid" id="forest-grid"></div>
   </main>
+
+  <nav class="app-nav">
+    <a href="index.html"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6.4"/><circle cx="9" cy="9" r="2.7"/></svg><span>Focus</span></a>
+    <a href="trees.html"><svg viewBox="0 0 18 18"><path d="M9 15V9"/><path d="M9 9C9 9 5.8 8.8 5.8 5.2C9 5.2 9 9 9 9Z"/><path d="M9 9C9 9 12.2 8.8 12.2 5.2C9 5.2 9 9 9 9Z"/></svg><span>Trees</span></a>
+    <a href="forest.html" class="active"><svg viewBox="0 0 18 18"><path d="M5 13 7.3 6.5 9.6 13Z"/><path d="M8.4 14 11.4 5 14.4 14Z"/></svg><span>Forest</span></a>
+    <a href="history.html"><svg viewBox="0 0 18 18"><path d="M3.5 14.5H14.5"/><path d="M5.5 14.5V10"/><path d="M9 14.5V5.5"/><path d="M12.5 14.5V8.5"/></svg><span>History</span></a>
+  </nav>
 
   <script>
     const TREE_EMOJIS = { oak:"🌳", pine:"🌲", cherry:"🌸", palm:"🌴", cactus:"🌵", maple:"🍁", bamboo:"🎋", bonsai:"🪴" };

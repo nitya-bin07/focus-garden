@@ -5,228 +5,102 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Focus Garden</title>
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230e1712%27/%3E%3Cpath d=%27M16 6 10 18h3l-4 8h14l-4-8h3z%27 fill=%27%238fe3a8%27/%3E%3C/svg%3E" />
   <style>
-    /* ── COIN BADGE ── */
-    .coin-badge {
-      position: fixed;
-      top: 1rem;
-      right: 1.2rem;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 999px;
-      padding: 0.25rem 0.8rem 0.25rem 0.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      z-index: 200;
-    }
-    .coin-circle {
-      width: 28px; height: 28px;
-      background: radial-gradient(circle at 35% 35%, #fde68a, #f59e0b);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.9rem;
-      box-shadow: 0 0 8px rgba(245,158,11,0.6), 0 0 16px rgba(245,158,11,0.3);
-      animation: coinShine 2s ease-in-out infinite;
-    }
-    @keyframes coinShine {
-      0%,100% { box-shadow: 0 0 8px rgba(245,158,11,0.6), 0 0 16px rgba(245,158,11,0.3); }
-      50%      { box-shadow: 0 0 14px rgba(245,158,11,0.9), 0 0 28px rgba(245,158,11,0.5); }
-    }
-    .coin-count { font-weight: 600; color: #fde68a; font-size: 0.8rem; }
-
-    /* ── LAYOUT ── */
-    .app-container {
-      width: 100%; max-width: 420px;
-      margin: 0 auto;
-      padding: 1.4rem 1.4rem 6rem;
-      display: flex; flex-direction: column; align-items: center;
-      gap: 1.2rem;
-    }
-
-    /* ── HEADER ── */
-    .app-header {
-      width: 100%; text-align: center;
-      padding: 1rem 1.4rem 0.8rem;
-      background: linear-gradient(135deg, rgba(18,28,48,0.9), rgba(8,12,22,0.85));
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-    }
-    .app-header h1 {
-      font-size: 1.8rem; font-weight: 700;
-      background-image: linear-gradient(90deg, #7CFF9B, #3EDC81);
-      background-clip: text; -webkit-background-clip: text;
-      color: transparent; -webkit-text-fill-color: transparent;
-    }
-    .app-header p { font-size: 0.8rem; color: rgba(220,230,255,0.6); margin-top: 4px; }
-
-    /* ── TIMER CARD ── */
-    .timer-card {
-      width: 100%;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 24px;
-      padding: 1.4rem 1rem 1rem;
-      display: flex; flex-direction: column; align-items: center; gap: 1rem;
-    }
-
-    .timer-wrapper {
-      position: relative; width: 180px; height: 180px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .progress-ring { position: absolute; transform: rotate(-90deg); }
-    .progress-ring-fill { transition: stroke-dashoffset 0.3s linear; }
-    .timer-display {
-      font-size: 1.8rem; font-weight: 700;
-      background: rgba(255,255,255,0.07);
-      padding: 0.4rem 0.9rem; border-radius: 10px;
-      letter-spacing: 1px;
-    }
-
-    /* presets */
-    .preset-buttons {
-      display: flex; flex-wrap: wrap;
-      justify-content: center; gap: 0.35rem;
-      width: 100%;
-    }
-    .preset-buttons button {
-      background: rgba(255,255,255,0.06);
-      border: none; color: #e5e7eb;
-      border-radius: 6px; padding: 0.3rem 0.6rem;
-      font-size: 0.75rem; cursor: pointer;
-    }
-    .preset-buttons button.active {
-      background: #22c55e; color: #022c22; font-weight: 600;
-    }
-
-    #minutes-input {
-      width: 100%; padding: 0.4rem;
-      background: rgba(255,255,255,0.06);
-      border: none; border-radius: 8px;
-      color: #e5e7eb; text-align: center;
-    }
-
-    .warning-message {
-      color: #facc15; font-size: 0.75rem;
-      min-height: 1rem; text-align: center;
-    }
-
-    /* ── CONTROLS ── */
-    .controls {
-      display: flex; gap: 0.6rem; width: 100%;
-    }
-    #start-btn {
-      flex: 2;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #022c22; border: none; border-radius: 12px;
-      padding: 0.7rem; font-weight: 700; font-size: 1rem; cursor: pointer;
-    }
-    #reset-btn {
-      flex: 1;
-      background: rgba(255,255,255,0.08);
-      border: none; border-radius: 12px;
-      color: #e5e7eb; cursor: pointer; font-size: 0.85rem;
-    }
-
-    /* ── PLANT ── */
-    .plant-card {
-      width: 100%;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 20px;
-      padding: 1.2rem;
-      text-align: center;
-    }
-    .plant { font-size: 2.8rem; display: block; transition: transform 0.6s ease, opacity 0.6s ease; }
-    .plant.seed { opacity: 0.4; transform: scale(0.6); }
-    .plant.sprout { opacity: 0.7; transform: scale(0.85); }
-    .plant.tree { opacity: 1; transform: scale(1.1); }
-    .plant.failed { opacity: 0.3; transform: rotate(-15deg) scale(0.9); filter: grayscale(100%); }
-    .plant-status { font-size: 0.75rem; opacity: 0.5; margin-top: 0.4rem; }
-
-    @keyframes growPulse {
-      0% { transform: scale(0.9); } 50% { transform: scale(1.2); } 100% { transform: scale(1); }
-    }
-    .plant.growing { animation: growPulse 0.6s ease; }
-
-    /* ── SETTINGS ROW ── */
-    .settings-row {
-      width: 100%;
-      display: flex; gap: 0.6rem;
-    }
-    .settings-row button {
-      flex: 1;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      color: #9ca3af; font-size: 0.75rem;
-      padding: 0.55rem 0.3rem;
-      cursor: pointer; display: flex;
-      flex-direction: column; align-items: center; gap: 0.2rem;
-    }
-    .settings-row button:hover { background: rgba(255,255,255,0.1); color: #e5e7eb; }
-    .settings-row button span.icon { font-size: 1.1rem; }
-
-    /* ── SETTINGS PANEL ── */
-    .settings-panel {
-      width: 100%;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 1rem;
+    /* ── Page-specific: session note modal ── */
+    .note-modal {
       display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 8, 6, 0.75);
+      backdrop-filter: blur(3px);
+      z-index: 998;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem;
+    }
+
+    .note-modal.open { display: flex; }
+
+    .note-modal-card {
+      background: linear-gradient(180deg, var(--bg-canopy-1), var(--bg-canopy-2));
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 340px;
+      display: flex;
       flex-direction: column;
       gap: 0.8rem;
-    }
-    .settings-panel.open { display: flex; }
-
-    .settings-panel h3 {
-      font-size: 0.8rem; color: #6b7280;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      margin-bottom: 0.2rem;
+      box-shadow: var(--shadow-deep);
     }
 
-    /* focus mode */
-    .focus-mode { display: flex; flex-direction: column; gap: 0.4rem; }
-    .mode-option {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-size: 0.8rem; cursor: pointer;
+    .note-modal-card .headline {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--glow);
     }
-    .mode-option input { accent-color: #22c55e; }
 
-    /* category */
-    .category-select {
-      width: 100%;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 0.5rem 0.8rem;
-      color: #e5e7eb; font-size: 0.85rem;
-      appearance: none; cursor: pointer; outline: none;
+    .note-modal-card .subhead {
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
-    .category-actions {
-      display: flex; gap: 0.5rem;
+
+    .note-modal-card textarea {
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 0.7rem;
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      font-family: var(--font-body);
+      resize: none;
+      height: 80px;
+      outline: none;
     }
-    .cat-btn {
-      flex: 1; background: rgba(255,255,255,0.06);
-      border: none; border-radius: 8px;
-      padding: 0.4rem; color: #9ca3af;
-      font-size: 0.75rem; cursor: pointer;
+
+    .note-modal-card textarea:focus { border-color: var(--border-strong); }
+
+    .note-modal-actions { display: flex; gap: 0.6rem; }
+
+    #note-skip-btn {
+      flex: 1;
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 0.6rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: var(--font-body);
     }
-    .cat-btn.danger { color: #fca5a5; }
-    .cat-btn:hover { background: rgba(255,255,255,0.12); }
+
+    #note-save-btn {
+      flex: 2;
+      background: linear-gradient(135deg, var(--glow), var(--fern));
+      border: none;
+      border-radius: var(--r-sm);
+      padding: 0.6rem;
+      color: #08130c;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: var(--font-body);
+    }
+
+    #confetti-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
   </style>
 </head>
 
-<div id="toast" class="toast hidden"></div>
-
 <body>
-  <nav class="app-nav">
-    <a href="index.html">Focus</a>
-    <a href="trees.html">Trees</a>
-    <a href="forest.html">Forest</a>
-    <a href="history.html">History</a>
-  </nav>
+  <div id="toast" class="toast hidden"></div>
 
   <!-- COIN -->
   <div class="coin-badge">
@@ -246,10 +120,8 @@
     <div class="timer-card">
       <div class="timer-wrapper">
         <svg class="progress-ring" width="180" height="180">
-          <circle class="progress-ring-bg" stroke="#1e293b" stroke-width="8"
-            fill="transparent" r="80" cx="90" cy="90"/>
-          <circle class="progress-ring-fill" stroke="#22c55e" stroke-width="8"
-            fill="transparent" r="80" cx="90" cy="90"/>
+          <circle class="progress-ring-bg" stroke-width="8" fill="transparent" r="80" cx="90" cy="90"/>
+          <circle class="progress-ring-fill" stroke-width="8" fill="transparent" r="80" cx="90" cy="90"/>
         </svg>
         <div class="timer-display ring-timer">15:00</div>
       </div>
@@ -323,21 +195,29 @@
       </div>
     </div>
 
-    <!-- SESSION NOTE MODAL -->
-<div id="note-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:998; align-items:center; justify-content:center;">
-  <div style="background:#0f172a; border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:1.5rem; width:90%; max-width:340px; display:flex; flex-direction:column; gap:0.8rem;">
-    <p style="font-size:1rem; font-weight:600; color:#86efac;">🌳 Session Complete!</p>
-    <p style="font-size:0.8rem; color:#6b7280;">What did you accomplish this session?</p>
-    <textarea id="session-note-input" placeholder="e.g. Finished chapter 3, built the timer feature..." style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:0.7rem; color:#e5e7eb; font-size:0.82rem; resize:none; height:80px; outline:none; font-family:inherit;"></textarea>
-    <div style="display:flex; gap:0.6rem;">
-      <button id="note-skip-btn" style="flex:1; background:rgba(255,255,255,0.06); border:none; border-radius:10px; padding:0.6rem; color:#6b7280; cursor:pointer; font-size:0.8rem;">Skip</button>
-      <button id="note-save-btn" style="flex:2; background:linear-gradient(135deg,#22c55e,#16a34a); border:none; border-radius:10px; padding:0.6rem; color:#022c22; font-weight:700; cursor:pointer; font-size:0.8rem;">Save Note ✓</button>
-    </div>
-  </div>
-</div>
   </main>
 
-  <canvas id="confetti-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;"></canvas>
+  <!-- SESSION NOTE MODAL -->
+  <div id="note-modal" class="note-modal">
+    <div class="note-modal-card">
+      <p class="headline">🌳 Session Complete!</p>
+      <p class="subhead">What did you accomplish this session?</p>
+      <textarea id="session-note-input" placeholder="e.g. Finished chapter 3, built the timer feature..."></textarea>
+      <div class="note-modal-actions">
+        <button id="note-skip-btn">Skip</button>
+        <button id="note-save-btn">Save Note ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <nav class="app-nav">
+    <a href="index.html" class="active"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6.4"/><circle cx="9" cy="9" r="2.7"/></svg><span>Focus</span></a>
+    <a href="trees.html"><svg viewBox="0 0 18 18"><path d="M9 15V9"/><path d="M9 9C9 9 5.8 8.8 5.8 5.2C9 5.2 9 9 9 9Z"/><path d="M9 9C9 9 12.2 8.8 12.2 5.2C9 5.2 9 9 9 9Z"/></svg><span>Trees</span></a>
+    <a href="forest.html"><svg viewBox="0 0 18 18"><path d="M5 13 7.3 6.5 9.6 13Z"/><path d="M8.4 14 11.4 5 14.4 14Z"/></svg><span>Forest</span></a>
+    <a href="history.html"><svg viewBox="0 0 18 18"><path d="M3.5 14.5H14.5"/><path d="M5.5 14.5V10"/><path d="M9 14.5V5.5"/><path d="M12.5 14.5V8.5"/></svg><span>History</span></a>
+  </nav>
 
   <script>
     function togglePanel(id) {
@@ -348,17 +228,17 @@
       // open if it wasn't open
       if (!isOpen) panel.classList.add("open");
     }
- 
-      function showNoteModal() {
+
+    function showNoteModal() {
       const modal = document.getElementById("note-modal");
-      modal.style.display = "flex";
+      modal.classList.add("open");
       document.getElementById("session-note-input").value = "";
       document.getElementById("session-note-input").focus();
     }
 
     function closeNoteModal(saveNote) {
       const modal = document.getElementById("note-modal");
-      modal.style.display = "none";
+      modal.classList.remove("open");
 
       if (saveNote) {
         const note = document.getElementById("session-note-input").value.trim();
@@ -388,7 +268,7 @@
         y: Math.random() * -canvas.height,
         w: Math.random() * 10 + 5,
         h: Math.random() * 5 + 3,
-        color: ["#22c55e","#86efac","#fde68a","#a78bfa","#60a5fa","#f472b6"][Math.floor(Math.random()*6)],
+        color: ["#8fe3a8","#7cb389","#e8b972","#c9a5e8","#79b8d9","#e79bb8"][Math.floor(Math.random()*6)],
         speed: Math.random() * 4 + 2,
         angle: Math.random() * 360,
         spin: Math.random() * 4 - 2,
